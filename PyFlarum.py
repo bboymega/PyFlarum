@@ -8,13 +8,14 @@ from getpass import getpass
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-main_url="https://URL_OF_THE_SITE/"
-dis_url="https://URL_OF_THE_SITE/api/discussions"
-post_url="https://URL_OF_THE_SITE/api/posts"
-login_url="https://URL_OF_THE_SITE/login"
+URL_OF_THE_SITE="your site"
+main_url="https://" + URL_OF_THE_SITE + "/"
+dis_url="https://" + URL_OF_THE_SITE+ "/api/discussions"
+post_url="https://" + URL_OF_THE_SITE + "/api/posts"
+login_url="https://" + URL_OF_THE_SITE + "/login"
 
 headers = {
-    'Host': 'URL_OF_THE_SITE',
+    'Host': URL_OF_THE_SITE,
     'Connection': 'keep-alive',
     'DNT': '1',
     'Upgrade-Insecure-Requests': '1',
@@ -51,8 +52,8 @@ def read_session():
         print("Using previous session")
     session_token=config.get("X-CSRF-Token")
     session_cookies=config.get("Set-Cookie")
-    
-    
+
+
 def get_session():
     global pagefetch
     global bot
@@ -77,8 +78,9 @@ def login():
     global logged
     global session_token
     global session_cookies
+    global URL_OF_THE_SITE
     login_header={
-        'Host': 'URL_OF_THE_SITE',
+        'Host': URL_OF_THE_SITE,
         'Connection': 'keep-alive',
         'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
         'DNT': '1',
@@ -87,11 +89,11 @@ def login():
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': '*/*',
-        'Origin': 'https://URL_OF_THE_SITE',
+        'Origin': 'https://'+URL_OF_THE_SITE+'',
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Dest': 'empty',
-        'Referer': 'https://URL_OF_THE_SITE/',
+        'Referer': 'https://'+URL_OF_THE_SITE+'/',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'en-US,en;q=0.9',
         'Cookie': session_cookies[:55]
@@ -108,11 +110,12 @@ def login():
         logged=1
     else:
         logged=0
-    
+
 def new_discussion(title, post, tags):
     global bot
+    global URL_OF_THE_SITE
     dis_headers={
-        'Host': 'URL_OF_THE_SITE',
+        'Host': URL_OF_THE_SITE,
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
@@ -122,11 +125,11 @@ def new_discussion(title, post, tags):
         'sec-ch-ua-mobile': '?0',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36 Content-Type: application/json; charset=UTF-8',
         'Accept': '*/*',
-        'Origin': 'https://URL_OF_THE_SITE',
+        'Origin': 'https://'+URL_OF_THE_SITE,
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Dest': 'empty',
-        'Referer': 'https://URL_OF_THE_SITE/',
+        'Referer': 'https://'+URL_OF_THE_SITE+'/',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'en-US,en;q=0.9',
         'Cookie': session_cookies[:55]+' ;'+session_cookies[156:156+55]
@@ -140,8 +143,9 @@ def new_discussion(title, post, tags):
 
 def new_post(dis_id, post):
     global bot
+    global URL_OF_THE_SITE
     post_headers={
-        'Host': 'URL_OF_THE_SITE',
+        'Host': URL_OF_THE_SITE,
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
@@ -152,11 +156,11 @@ def new_post(dis_id, post):
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': '*/*',
-        'Origin': 'https://URL_OF_THE_SITE',
+        'Origin': 'https://'+URL_OF_THE_SITE,
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Dest': 'empty',
-        'Referer': 'https://URL_OF_THE_SITE',
+        'Referer': 'https://'+URL_OF_THE_SITE,
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'en-US,en;q=0.9',
         'Cookie': session_cookies[:55]+'; '+session_cookies[156:156+55]
@@ -167,13 +171,13 @@ def new_post(dis_id, post):
         print("Post successfully created")
     else:
         print("Failed to create post")
-    
+
 
 
 if Path('config.json').is_file():
     print ("Found previous session in config.json. If a new session is needed please delete config.json first.")
     read_session()
-    
+
 else:
     print ("Session not found. A new session will be created.")
     get_session()
@@ -183,4 +187,4 @@ else:
         credentials={"identification":user,"password":password,"remember":'true'}
         login()
 
-        
+
